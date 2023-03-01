@@ -1,27 +1,10 @@
-import { Connection, Client } from '@temporalio/client';
+import { nanoid } from 'nanoid'
+import Temporal from './temporal';
 import { example } from './workflows';
-import { nanoid } from 'nanoid';
-import * as fs from 'fs';
 
-async function run() {
-  const connection = await Connection.connect({
-    address: process.env.TEMPORAL_URL,
-    tls: {
-      clientCertPair: {
-        crt: fs.readFileSync(`./.temporal/certs/snap-mobile.pem`),
-        key: fs.readFileSync(`./.temporal/certs/snap-mobile.key`),
-      },
-    },
-  });
-
-  const client = new Client({
-    connection,
-    namespace: process.env.TEMPORAL_NAMESPACE
-  });
-
-  const handle = await client.workflow.start(example, { args: ['Temporal'], taskQueue: 'hello-world', workflowId: 'workflow-' + nanoid(), });
-  console.log(`Started workflow ${handle.workflowId}`);
-  console.log(await handle.result()); // Hello, Temporal!
-}
-
-run();
+(async function() {
+  const client = await Temporal.createClient();
+  const workflow = await client.workflow.start(example, { args: ['Temporal'], taskQueue: 'hello-world', workflowId: `workflow-snap-${nanoid()}` });
+  console.log(`Started workflow ${workflow.workflowId}`);
+  console.log(await workflow.result());
+}());
