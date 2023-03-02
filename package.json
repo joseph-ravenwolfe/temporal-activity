@@ -5,7 +5,7 @@
   "main": "dist/index.js",
   "scripts": {
     "start": "tsc-watch --onSuccess \"node dist/index.js\"",
-    "worker": "tsc-watch --onSuccess \"node dist/worker.js\"",
+    "worker": "tsc && node dist/worker.js",
     "lint": "eslint . --ext .ts"
   },
   "keywords": [],
