@@ -6,6 +6,7 @@
   "scripts": {
     "start": "tsc-watch --onSuccess \"node dist/index.js\"",
     "worker": "tsc && node dist/worker.js",
+    "cron": "tsc-watch --onSuccess \"node dist/cron.js\"",
     "lint": "eslint . --ext .ts"
   },
   "keywords": [],

@@ -1,4 +1,4 @@
-import { Connection, Client } from '@temporalio/client';
+import { Connection, Client, WorkflowExecutionAlreadyStartedError } from '@temporalio/client';
 import { NativeConnection, Worker } from '@temporalio/worker';
 import * as fs from 'fs';
 
@@ -37,4 +37,11 @@ async function createClient() {
   });
 }
 
-export default { createWorker, createClient }
+async function cancelCron(client, workflowId) {
+  const workflow = client.workflow.getHandle(workflowId);
+  await workflow.cancel();
+}
+
+const alreadyStartedError = WorkflowExecutionAlreadyStartedError;
+
+export default { createWorker, createClient, cancelCron, alreadyStartedError }
